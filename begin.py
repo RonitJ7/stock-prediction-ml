@@ -79,5 +79,19 @@ data_raw = pd.read_csv('nasdaq_1990_2024.csv', index_col='Price', parse_dates=Tr
 # also use volume traded: avg volume over timeframes and ratios of such again. 
 # volatility of stock: Std Dev of above values
 data = generate_features(data_raw)
-
+start_train = '1990-01-01'
+end_train = '2023-12-31'
+start_test = '2024-01-01'
+end_test = '2024-12-31'
+data_train = data.loc[start_train:end_train]
+data_test = data.loc[start_test:end_test]
+X_train = data_train.drop('close', axis=1).values
+Y_train = data_train['close'].values
+X_test = data_test.drop('close', axis=1).values
+Y_test = data_test['close'].values
+scaler = StandardScaler()
+X_scaled_train = scaler.fit_transform(X_train)
+X_scaled_test = scaler.transform(X_test)
+print(X_train.shape, Y_train.shape)
+# print(data.round(decimals = 3).head(5))
 # print(data)
