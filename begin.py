@@ -100,16 +100,17 @@ def performLR(data):
     print("R2 score on test set: ", r2_score(Y_test,predictions))
     pred_csv = pd.DataFrame({"date": data.loc['2024-01-01': '2024-12-31'].index, "predicted_close": predictions, "actual_close": Y_test})
     pred_csv.to_csv('predictions.csv', index=False)
-#first let's obtain the data and add the features
-data_raw = pd.read_csv('nasdaq_1990_2024.csv', index_col='Price', parse_dates=True)
-# features to consider: 
-# avg close price over the past 3 timeframes, and ratios of above. 
-# also use volume traded: avg volume over timeframes and ratios of such again. 
-# volatility of stock: Std Dev of above values
-data = generate_features(data_raw)
-#Now we will perform linear regression on the data
-performLR(data)
 
+def main():
+    #first let's obtain the data and add the features
+    data_raw = pd.read_csv('nasdaq_1990_2024.csv', index_col='Price', parse_dates=True)
+    # features to consider: 
+    # avg close price over the past 3 timeframes, and ratios of above. 
+    # also use volume traded: avg volume over timeframes and ratios of such again. 
+    # volatility of stock: Std Dev of above values
+    data = generate_features(data_raw)
+    #Now we will perform linear regression on the data
+    performLR(data)
 
-# print(data.round(decimals = 3).head(5))
-# print(data)
+if __name__ == "__main__":
+    main()
