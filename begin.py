@@ -1,4 +1,8 @@
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import SGDRegressor
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import r2_score
 import pandas as pd
 
 def add_original_features(df,df_new):
@@ -92,6 +96,14 @@ Y_test = data_test['close'].values
 scaler = StandardScaler()
 X_scaled_train = scaler.fit_transform(X_train)
 X_scaled_test = scaler.transform(X_test)
-print(X_train.shape, Y_train.shape)
+lr = SGDRegressor(max_iter = 5000,penalty = None, learning_rate = 'invscaling', eta0 = 0.01, random_state = 42)
+tscv = TimeSeriesSplit(n_splits=3)
+grid_search = GridSearchCV(lr,param_grid = {"alpha": [1e-4,3e-3,1e-3,3e-2]},cv = tscv,scoring = 'r2')
+grid_search.fit(X_scaled_train, Y_train)
+print("Best parameters found: ", grid_search.best_params_)
+lr_search = grid_search.best_estimator_
+predictions = lr_search.predict(X_scaled_test)
+print("R2 score on test set: ", r2_score(Y_test,predictions))
+
 # print(data.round(decimals = 3).head(5))
 # print(data)
