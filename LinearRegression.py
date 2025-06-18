@@ -2,6 +2,7 @@ from sklearn.linear_model import SGDRegressor
 from sklearn.model_selection import TimeSeriesSplit, GridSearchCV
 from sklearn.metrics import r2_score
 from sklearn.preprocessing import StandardScaler
+# from sklearn.preprocessing import MinMaxScaler
 import pandas as pd
 
 def performLR(data):
@@ -16,6 +17,7 @@ def performLR(data):
     X_test = data_test.drop('close', axis=1).values
     Y_test = data_test['close'].values
     scaler = StandardScaler()
+    # scaler = MinMaxScaler()
     X_scaled_train = scaler.fit_transform(X_train)
     X_scaled_test = scaler.transform(X_test)
     lr = SGDRegressor(max_iter = 5000,penalty = None, learning_rate = 'invscaling', eta0 = 0.01, random_state = 42)
